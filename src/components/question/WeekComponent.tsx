@@ -14,7 +14,7 @@ const WeekComponent = ({ week }: { week: Week }) => {
       </div>
 
       {/* 주제 목록 */}
-      <div className="flex flex-col justify-center mt-4 flex-grow">
+      <div className="flex flex-col  mt-4 flex-grow">
         {week.topic ? (
           week.topic.map((topic) => (
             <div

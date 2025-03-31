@@ -1,10 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Question } from "../../types/question";
-import { getUser } from "../utils/user";
-
+import { getUser } from "../../utils/user";
 const QuestionComponent = ({ question }: { question: Question }) => {
   const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
-  const maxTitleLength = 20;
+  const maxTitleLength = 20; // 질문 제목 최대 길이
   const navigate = useNavigate();
 
   const handleClick = () => {

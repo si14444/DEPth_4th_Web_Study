@@ -5,6 +5,7 @@ import Layout from "./components/Layout";
 import EmptyPage from "./page/EmptyPage";
 import HomePage from "./page/HomePage";
 import QuestionPage from "./page/QuestionPage";
+import QuestionWritePage from "./page/QuestionWritePage";
 import UserPage from "./page/UserPage";
 
 const Router = () => {
@@ -20,6 +21,7 @@ const Router = () => {
             path="*"
             element={<EmptyPage text="요청하신 페이지를 찾을 수 없어요" />}
           />
+          <Route path="/question/write" element={<QuestionWritePage />} />
         </Routes>
       </Layout>
     </BrowserRouter>
