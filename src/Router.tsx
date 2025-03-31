@@ -2,7 +2,7 @@ import { BrowserRouter, Routes } from "react-router-dom";
 
 import { Route } from "react-router-dom";
 import Layout from "./components/Layout";
-import EmptyPage from "./page/EmpthPage";
+import EmptyPage from "./page/EmptyPage";
 import HomePage from "./page/HomePage";
 import QuestionPage from "./page/QuestionPage";
 import UserPage from "./page/UserPage";

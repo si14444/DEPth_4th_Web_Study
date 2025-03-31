@@ -22,6 +22,13 @@ export const weeks: Weeks = [
     id: 2,
     name: "2주차",
     date: "2025-04-01",
+    topic: [
+      {
+        id: 1,
+        name: "주제1",
+        description: "주제1 설명",
+      },
+    ],
   },
   {
     id: 3,
