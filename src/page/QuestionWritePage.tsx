@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const QuestionWritePage = () => {
   const [question, setQuestion] = useState("");
@@ -7,6 +8,15 @@ const QuestionWritePage = () => {
   const handleSave = () => {
     console.log(question, answer);
   };
+
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
+
+  useEffect(() => {
+    if (id) {
+      setQuestion(id);
+    }
+  }, [id]);
 
   return (
     <div className="flex w-screen flex-col p-50">
