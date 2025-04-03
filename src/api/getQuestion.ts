@@ -16,7 +16,7 @@ export async function getQuestion(): Promise<QuestionList[]> {
       const questionData = docSnap.data() as QuestionList;
       const questionId = docSnap.id;
 
-      // 3. 해당 문서의 'topic' 하위 컬렉션 가져오기
+      // 3. 해당 문서의 'questions 하위 컬렉션 가져오기
       const questionCollectionRef = collection(
         firestore,
         "question",
@@ -25,16 +25,19 @@ export async function getQuestion(): Promise<QuestionList[]> {
       );
       const questionQuerySnapshot = await getDocs(questionCollectionRef);
 
-      // 4. 하위 컬렉션 데이터 배열로 변환
+      // 4. 하위 컬렉션 데이터 배열로 변환 (각 문서의 ID도 포함)
       const questions: Question[] = [];
       questionQuerySnapshot.forEach((questionDoc) => {
-        questions.push(questionDoc.data() as Question);
+        questions.push({
+          ...(questionDoc.data() as Question),
+          id: questionDoc.id, // 각 question 문서의 ID 추가
+        });
       });
 
       // 5. 주차 데이터에 토픽 배열 추가
       return {
         ...questionData,
-        id: Number(questionId) || questionId,
+        id: questionId, // id 추가
         questions: questions,
       };
     });
@@ -43,7 +46,7 @@ export async function getQuestion(): Promise<QuestionList[]> {
     const populatedQuestions = await Promise.all(questionPromises);
     const validQuestions = populatedQuestions.map((question) => ({
       ...question,
-      id: typeof question.id === "string" ? parseInt(question.id) : question.id,
+      id: question.id,
     }));
     QuestionList.push(...validQuestions);
 
