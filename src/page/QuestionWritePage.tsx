@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-
+import CodeBlock from "../components/CodeBlock";
 const QuestionWritePage = () => {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -34,6 +34,8 @@ const QuestionWritePage = () => {
               rows={2}
               className="border-1 resize-none border-gray-300 rounded-md p-2 mt-2 bg-white"
             />
+
+            <CodeBlock />
             <label className="text-md font-bold mt-10">정답</label>
             <textarea
               value={answer}
