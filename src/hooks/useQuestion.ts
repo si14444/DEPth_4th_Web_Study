@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { getWeek } from "../api/getWeek";
+import { getQuestion } from "../api/getQuestion";
 
-export function useWeek() {
+export function useQuestion() {
   return useQuery({
-    queryKey: ["GetWeek"],
-    queryFn: () => getWeek(),
+    queryKey: ["GetQuestion"],
+    queryFn: () => getQuestion(),
     retry: 1, // 실패 시 1번만 재시도
     staleTime: 5 * 60 * 1000, // 5분간 데이터 유지
   });

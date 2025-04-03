@@ -1,5 +1,6 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import QuestionComponent from "../components/question/QuestionComponent";
+import { useQuestion } from "../hooks/useQuestion";
 import { QuestionList } from "../types/question";
 
 const DummyQuestionList: QuestionList = {
@@ -44,6 +45,12 @@ const DummyQuestionList: QuestionList = {
 
 const QuestionPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const { data: questions } = useQuestion();
+
+  const filteredQuestion = questions?.find(
+    (question) => question.weekId === Number(id)
+  );
   return (
     <div className="flex w-screen flex-col items-center mt-40 p-10">
       <div className="flex justify-end w-full mb-4">
@@ -56,7 +63,7 @@ const QuestionPage = () => {
       </div>
 
       <div className="grid grid-cols-2 gap-4 w-full ">
-        {DummyQuestionList.questions.map((question) => (
+        {filteredQuestion?.questions.map((question) => (
           <QuestionComponent key={question.id} question={question} />
         ))}
       </div>
