@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import CodeBlock from "../components/CodeBlock";
+
 const QuestionWritePage = () => {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [code, setCode] = useState<string>(
+    '// 여기에 JavaScript 코드를 입력하세요\nfunction example() {\n  const greeting = "안녕하세요!";\n  console.log(greeting);\n  return greeting;\n}'
+  );
+
+  const [showCodeBlock, setShowCodeBlock] = useState(false);
 
   const handleSave = () => {
-    console.log(question, answer);
+    console.log(question, answer, code);
   };
 
   const [searchParams] = useSearchParams();
@@ -17,6 +23,10 @@ const QuestionWritePage = () => {
       setQuestion(id);
     }
   }, [id]);
+
+  const toggleCodeBlock = () => {
+    setShowCodeBlock(!showCodeBlock);
+  };
 
   return (
     <div className="flex w-screen flex-col p-50">
@@ -35,14 +45,62 @@ const QuestionWritePage = () => {
               className="border-1 resize-none border-gray-300 rounded-md p-2 mt-2 bg-white"
             />
 
-            <CodeBlock />
+            <button
+              onClick={toggleCodeBlock}
+              className="mt-4 px-4 py-2 bg-gray-200 text-gray-800 border cursor-pointer border-gray-300 rounded-md hover:bg-gray-300 transition-colors flex items-center gap-2 self-start"
+            >
+              {showCodeBlock ? (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                  코드 블록 닫기
+                </>
+              ) : (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    />
+                  </svg>
+                  코드 블록 추가
+                </>
+              )}
+            </button>
+
+            {showCodeBlock && (
+              <div className="mt-4 border border-gray-200 rounded-md bg-white">
+                <CodeBlock code={code} setCode={setCode} />
+              </div>
+            )}
+
             <label className="text-md font-bold mt-10">정답</label>
             <textarea
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               placeholder="정답 입력"
               rows={5}
-              className="border-1 resize-none border-gray-300 rounded-md p-2 mt-2  bg-white"
+              className="border-1 resize-none border-gray-300 rounded-md p-2 mt-2 bg-white"
             />
             <button
               onClick={() => {

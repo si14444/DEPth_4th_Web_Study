@@ -5,13 +5,18 @@ import "prismjs/components/prism-typescript";
 import "prismjs/themes/prism-tomorrow.css";
 import { useEffect, useRef, useState } from "react";
 
-const CodeBlock = () => {
-  const [code, setCode] = useState<string>(
-    '// 여기에 JavaScript 코드를 입력하세요\nfunction example() {\n  const greeting = "안녕하세요!";\n  console.log(greeting);\n  return greeting;\n}'
-  );
+const CodeBlock = ({
+  code,
+  setCode,
+}: {
+  code: string;
+  setCode: (code: string) => void;
+}) => {
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
   const previewRef = useRef<HTMLPreElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // 미리보기 탭에서 구문 강조 적용
   useEffect(() => {
     if (previewRef.current && activeTab === "preview") {
       previewRef.current.innerHTML = `<code class="language-typescript">${escapeHTML(
@@ -21,6 +26,20 @@ const CodeBlock = () => {
     }
   }, [code, activeTab]);
 
+  // textarea 높이 자동 조절 - activeTab을 의존성 배열에 추가
+  useEffect(() => {
+    if (activeTab === "edit") {
+      // 약간의 지연을 주어 DOM이 업데이트된 후 높이 조정
+      setTimeout(adjustTextareaHeight, 0);
+    }
+  }, [code, activeTab]);
+
+  // 탭 변경 핸들러
+  const handleTabChange = (tab: "edit" | "preview") => {
+    setActiveTab(tab);
+  };
+
+  // HTML 이스케이프 함수
   const escapeHTML = (text: string): string => {
     return text
       .replace(/&/g, "&amp;")
@@ -34,12 +53,24 @@ const CodeBlock = () => {
     setCode(e.target.value);
   };
 
-  return (
-    <div className="flex flex-col w-full mt-8 gap-4">
-      <h2 className="text-xl font-bold text-center">
-        탭 전환 TypeScript 코드 에디터
-      </h2>
+  // textarea 높이 조절 함수
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
 
+    // 현재 스크롤 위치 저장
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    textarea.style.height = "auto";
+    const scrollHeight = textarea.scrollHeight;
+    textarea.style.height = `${Math.max(100, scrollHeight)}px`;
+
+    // 스크롤 위치 복원
+    window.scrollTo(0, scrollTop);
+  };
+
+  return (
+    <div className="flex flex-col w-full pt-4 pb-4 max-w-3xl mx-auto gap-4">
       {/* 탭 메뉴 */}
       <div className="flex border-b border-gray-300">
         <button
@@ -48,7 +79,7 @@ const CodeBlock = () => {
               ? "border-b-2 border-blue-500 text-blue-600"
               : "text-gray-500 hover:text-gray-700"
           }`}
-          onClick={() => setActiveTab("edit")}
+          onClick={() => handleTabChange("edit")}
         >
           입력
         </button>
@@ -58,32 +89,40 @@ const CodeBlock = () => {
               ? "border-b-2 border-blue-500 text-blue-600"
               : "text-gray-500 hover:text-gray-700"
           }`}
-          onClick={() => setActiveTab("preview")}
+          onClick={() => handleTabChange("preview")}
         >
           미리보기
         </button>
       </div>
 
-      {/* 입력 탭 */}
-      {activeTab === "edit" && (
-        <div className="w-full h-64 border border-gray-300 rounded-md overflow-hidden">
+      {/* 입력 및 미리보기 영역  */}
+      <div className="w-full">
+        <div
+          className={`w-full border border-gray-300 rounded-md overflow-hidden ${
+            activeTab === "edit" ? "block" : "hidden"
+          }`}
+        >
           <textarea
-            className="w-full h-full p-4 font-mono resize-none focus:outline-none border-none"
+            ref={textareaRef}
+            className="w-full p-4 font-mono resize-none focus:outline-none border-none min-h-[100px]"
             value={code}
             onChange={handleChange}
             spellCheck={false}
+            onInput={adjustTextareaHeight}
           />
         </div>
-      )}
 
-      {/* 미리보기 탭 */}
-      {activeTab === "preview" && (
-        <div className="w-full h-64 border border-gray-300 rounded-md overflow-auto bg-gray-800">
+        {/* 미리보기 영역 */}
+        <div
+          className={`w-full border border-gray-300 rounded-md overflow-auto bg-gray-800 min-h-[100px] ${
+            activeTab === "preview" ? "block" : "hidden"
+          }`}
+        >
           <pre ref={previewRef} className="p-4 m-0 font-mono text-sm">
             <code className="language-typescript">{code}</code>
           </pre>
         </div>
-      )}
+      </div>
 
       <div className="text-sm text-gray-500 italic text-center">
         {activeTab === "edit"
