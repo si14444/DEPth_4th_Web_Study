@@ -10,7 +10,7 @@ const QuestionPage = () => {
   const filteredQuestion = questions?.find(
     (question) => question.weekId === Number(id)
   );
-  console.log("filteredQuestion", filteredQuestion);
+  const weekId = filteredQuestion?.weekId || 0;
   return (
     <div className="flex w-screen flex-col items-center mt-40 p-10">
       <div className="flex justify-end w-full mb-4">
@@ -24,7 +24,7 @@ const QuestionPage = () => {
 
       <div className="grid grid-cols-2 gap-4 w-full ">
         {filteredQuestion?.questions.map((question, index) => (
-          <QuestionComponent key={index} question={question} />
+          <QuestionComponent key={index} question={question} weekId={weekId} />
         ))}
       </div>
     </div>

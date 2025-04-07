@@ -1,28 +1,33 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { useState } from "react";
-import { Question } from "../types/question";
+import CodeBlock from "../components/CodeBlock";
+import { useQuestion } from "../hooks/useQuestion";
 import { getUser } from "../utils/user";
 
 const QuestionDetailPage = () => {
-  const dummyQuestion: Question = {
-    id: 1,
-    title: "질문",
-    userId: 1,
-    date: "2021-01-01",
-    answer: "정답",
-  };
-  //   const { id } = useParams();
+  const { id } = useParams();
+  const { data: questions } = useQuestion();
+  const [searchParams] = useSearchParams();
+  const weekId = searchParams.get("weekId");
+
   const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
-  const isOwner = currentUser?.id === dummyQuestion.userId;
+
+  const filteredQuestion = questions
+    ?.flatMap((question) =>
+      question.weekId === Number(weekId) ? question.questions : []
+    )
+    ?.find((q) => q.id === id);
+
+  const isOwner = currentUser?.id === Number(filteredQuestion?.userId);
 
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
 
   const handleEdit = () => {
     navigate({
       pathname: "/question/write",
-      search: `?id=${dummyQuestion.id}`,
+      //   search: `?id=${filteredQuestion.id}`,
     });
   };
 
@@ -33,7 +38,7 @@ const QuestionDetailPage = () => {
         <div className="p-8 border-b border-gray-100">
           <div className="flex justify-between items-start mb-4">
             <h1 className="text-2xl font-bold text-gray-800">
-              {dummyQuestion.title}
+              {filteredQuestion?.title}
             </h1>
 
             {/* 수정 버튼 추가 - 작성자인 경우에만 표시 */}
@@ -61,11 +66,17 @@ const QuestionDetailPage = () => {
             )}
           </div>
 
+          {filteredQuestion?.code && (
+            <div className="mt-4 border border-gray-200 rounded-md bg-white">
+              <CodeBlock code={filteredQuestion?.code} isEditable={false} />
+            </div>
+          )}
+
           {/* 유저 정보 */}
           <div className="flex justify-between items-center text-sm text-gray-500">
             <div className="flex items-center">
               <span className="font-medium mr-1">작성자:</span>
-              {getUser(dummyQuestion.userId)?.name}
+              {getUser(Number(filteredQuestion?.userId) || 0)?.name}
             </div>
             <div className="flex items-center">
               <svg
@@ -82,7 +93,7 @@ const QuestionDetailPage = () => {
                   d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
-              {dummyQuestion.date}
+              {filteredQuestion?.date}
             </div>
           </div>
         </div>
@@ -126,7 +137,7 @@ const QuestionDetailPage = () => {
           <div className="p-8 bg-white">
             <h2 className="text-lg font-semibold text-gray-700 mb-3">정답</h2>
             <div className="text-gray-600 p-4 bg-gray-50 rounded-lg border border-gray-100">
-              {dummyQuestion.answer}
+              {filteredQuestion?.answer}
             </div>
           </div>
         </div>

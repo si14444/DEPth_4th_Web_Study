@@ -1,7 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Question } from "../../types/question";
 import { getUser } from "../../utils/user";
-const QuestionComponent = ({ question }: { question: Question }) => {
+const QuestionComponent = ({
+  question,
+  weekId,
+}: {
+  question: Question;
+  weekId: number;
+}) => {
   //   const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
   const maxTitleLength = 20; // 질문 제목 최대 길이
   const navigate = useNavigate();
@@ -9,7 +15,7 @@ const QuestionComponent = ({ question }: { question: Question }) => {
   const handleClick = () => {
     // console.log(currentUser?.id, question.userId);
     // if (currentUser?.id === question.userId) {
-    navigate(`/questionDetail/${question.id}`);
+    navigate(`/questionDetail/${question.id}?weekId=${weekId}`);
     // } else {
     //   alert("본인 질문만 수정할 수 있습니다.");
     // }
