@@ -3,7 +3,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import CodeBlock from "../components/CodeBlock";
 import { useQuestion } from "../hooks/useQuestion";
-import { getUser } from "../utils/user";
+import { getUserName } from "../utils/user";
 
 const QuestionDetailPage = () => {
   const { id } = useParams();
@@ -73,10 +73,10 @@ const QuestionDetailPage = () => {
           )}
 
           {/* 유저 정보 */}
-          <div className="flex justify-between items-center text-sm text-gray-500">
+          <div className="flex justify-between items-center text-sm mt-4 text-gray-500">
             <div className="flex items-center">
               <span className="font-medium mr-1">작성자:</span>
-              {getUser(Number(filteredQuestion?.userId) || 0)?.name}
+              {getUserName(Number(filteredQuestion?.userId) || 0)?.name}
             </div>
             <div className="flex items-center">
               <svg

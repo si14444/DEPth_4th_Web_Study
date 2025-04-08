@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getQuestion } from "../api/getQuestion";
+import { getQuestion } from "../api/question";
 export function useQuestion() {
   return useQuery({
     queryKey: ["GetQuestion"],

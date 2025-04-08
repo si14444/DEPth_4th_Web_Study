@@ -1,7 +1,8 @@
-import { collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import { Question, QuestionList } from "../types/question";
 
+// 문제 목록 가져오기
 export async function getQuestion(): Promise<QuestionList[]> {
   try {
     // 1. 'question' 컬렉션의 모든 문서 가져오기
@@ -55,5 +56,22 @@ export async function getQuestion(): Promise<QuestionList[]> {
   } catch (error) {
     console.error("question 데이터 가져오기 오류:", error);
     throw new Error("question 데이터를 불러오는 중 오류가 발생했습니다");
+  }
+}
+
+// 문제 등록하기
+export async function addQuestion(question: Question, questionsId: string) {
+  try {
+    const questionCollectionRef = collection(
+      firestore,
+      "question",
+      questionsId,
+      "questions"
+    );
+    const docRef = await addDoc(questionCollectionRef, question);
+    console.log("문제 등록 성공:", docRef);
+  } catch (error) {
+    console.error("question 데이터 등록 오류:", error);
+    throw new Error("question 데이터를 등록하는 중 오류가 발생했습니다");
   }
 }

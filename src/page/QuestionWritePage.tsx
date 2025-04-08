@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { addQuestion } from "../api/question";
 import CodeBlock from "../components/CodeBlock";
-
+import { getUser } from "../utils/user";
 const QuestionWritePage = () => {
+  const navigate = useNavigate();
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [code, setCode] = useState<string>(
@@ -11,18 +13,35 @@ const QuestionWritePage = () => {
 
   const [showCodeBlock, setShowCodeBlock] = useState(false);
 
-  const handleSave = () => {
-    console.log(question, answer, code);
-  };
-
   const [searchParams] = useSearchParams();
-  const id = searchParams.get("id");
+  const weekId = searchParams.get("weekId");
+  const questionsId = searchParams.get("questionsId") || "";
 
-  useEffect(() => {
-    if (id) {
-      setQuestion(id);
+  const handleSave = () => {
+    const codeContent = showCodeBlock ? code : "";
+    try {
+      addQuestion(
+        {
+          title: question,
+          answer,
+          code: codeContent,
+          userId: getUser().id,
+          date: new Date()
+            .toLocaleDateString("ko-KR", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
+            .replace(/\. /g, "-")
+            .replace(".", ""),
+        },
+        questionsId
+      );
+      navigate(`/question/${weekId}`);
+    } catch (error) {
+      console.error("문제 저장 오류:", error);
     }
-  }, [id]);
+  };
 
   const toggleCodeBlock = () => {
     setShowCodeBlock(!showCodeBlock);

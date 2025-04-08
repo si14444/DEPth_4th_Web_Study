@@ -1,5 +1,5 @@
 export interface Question {
-  id: string;
+  id?: string;
   title: string;
   code?: string;
   answer: string;
@@ -8,6 +8,7 @@ export interface Question {
 }
 
 export interface QuestionList {
+  id: string;
   weekId: number;
   questions: Question[];
 }

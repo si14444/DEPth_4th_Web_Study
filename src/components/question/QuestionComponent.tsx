@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Question } from "../../types/question";
-import { getUser } from "../../utils/user";
+import { getUserName } from "../../utils/user";
 const QuestionComponent = ({
   question,
   weekId,
@@ -33,7 +33,7 @@ const QuestionComponent = ({
       </div>
       <div className="flex justify-between mt-4">
         <div className="text-sm text-gray-500">
-          {getUser(question.userId)?.name}
+          {getUserName(question.userId)?.name}
         </div>
         <div className="flex items-center">
           <svg
