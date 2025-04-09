@@ -1,4 +1,10 @@
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+} from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import { Question, QuestionList } from "../types/question";
 
@@ -73,5 +79,28 @@ export async function addQuestion(question: Question, questionsId: string) {
   } catch (error) {
     console.error("question 데이터 등록 오류:", error);
     throw new Error("question 데이터를 등록하는 중 오류가 발생했습니다");
+  }
+}
+
+// 문제 삭제하기
+export async function deleteQuestion(questionsId: string, questionId: string) {
+  try {
+    // 수정: 문서 참조를 직접 생성
+    const questionDocRef = doc(
+      firestore,
+      "question",
+      questionsId,
+      "questions",
+      questionId
+    );
+
+    // 문서 삭제
+    await deleteDoc(questionDocRef);
+    console.log("문제 삭제 성공:", questionId);
+
+    return true;
+  } catch (error) {
+    console.error("question 데이터 삭제 오류:", error);
+    throw new Error("question 데이터를 삭제하는 중 오류가 발생했습니다");
   }
 }
