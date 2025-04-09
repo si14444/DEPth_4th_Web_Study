@@ -4,21 +4,25 @@ import { useState } from "react";
 import { deleteQuestion } from "../api/question";
 import CodeBlock from "../components/CodeBlock";
 import { useQuestion } from "../hooks/useQuestion";
+import { getFilteredQuestion } from "../utils/getFilteredQuestions";
 import { getUserName } from "../utils/user";
 const QuestionDetailPage = () => {
   const { id } = useParams();
-  const { data: questions } = useQuestion();
+  const { data: questions, refetch } = useQuestion();
   const [searchParams] = useSearchParams();
   const weekId = searchParams.get("weekId");
 
   const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
 
-  const filteredQuestion = questions
-    ?.flatMap((question) =>
-      question.weekId === Number(weekId) ? question.questions : []
-    )
-    ?.find((q) => q.id === id);
+  const questionsId = questions?.find(
+    (question) => question.weekId === Number(weekId)
+  )?.id;
+  const filteredQuestion = getFilteredQuestion(
+    questions || [],
+    Number(weekId),
+    id || ""
+  );
 
   const isOwner = currentUser?.id === Number(filteredQuestion?.userId);
 
@@ -27,7 +31,7 @@ const QuestionDetailPage = () => {
   const handleEdit = () => {
     navigate({
       pathname: "/question/write",
-      //   search: `?id=${filteredQuestion.id}`,
+      search: `?questionsId=${questionsId}&questionId=${filteredQuestion?.id}&weekId=${weekId}`,
     });
   };
 
@@ -37,6 +41,7 @@ const QuestionDetailPage = () => {
     )?.id;
     deleteQuestion(questionsId || "", filteredQuestion?.id || "")
       .then(() => {
+        refetch();
         navigate(-1);
       })
       .catch((error) => {

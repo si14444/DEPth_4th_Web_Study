@@ -1,42 +1,79 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { addQuestion } from "../api/question";
+import { addQuestion, updateQuestion } from "../api/question";
 import CodeBlock from "../components/CodeBlock";
+import { useQuestion } from "../hooks/useQuestion";
+import { getFilteredQuestion } from "../utils/getFilteredQuestions";
 import { getUser } from "../utils/user";
+
 const QuestionWritePage = () => {
-  const navigate = useNavigate();
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
-  const [code, setCode] = useState<string>(
-    '// 여기에 JavaScript 코드를 입력하세요\nfunction example() {\n  const greeting = "안녕하세요!";\n  console.log(greeting);\n  return greeting;\n}'
-  );
-
-  const [showCodeBlock, setShowCodeBlock] = useState(false);
-
+  // 문제 목록 가져오기
+  const { data: questions } = useQuestion();
+  // 주차 번호와 문제 번호 가져오기
   const [searchParams] = useSearchParams();
   const weekId = searchParams.get("weekId");
   const questionsId = searchParams.get("questionsId") || "";
+  const questionId = searchParams.get("questionId") || "";
+  const filteredQuestion = getFilteredQuestion(
+    questions || [],
+    Number(weekId),
+    questionId
+  );
 
+  // 문제 정보 상태 관리
+  const [question, setQuestion] = useState(filteredQuestion?.title || "");
+  const [answer, setAnswer] = useState(filteredQuestion?.answer || "");
+  const [code, setCode] = useState<string>(
+    filteredQuestion?.code ||
+      '// 여기에 JavaScript 코드를 입력하세요\nfunction example() {\n  const greeting = "안녕하세요!";\n  console.log(greeting);\n  return greeting;\n}'
+  );
+  const [showCodeBlock, setShowCodeBlock] = useState(false);
+
+  const navigate = useNavigate();
+
+  // 문제 저장
   const handleSave = () => {
     const codeContent = showCodeBlock ? code : "";
     try {
-      addQuestion(
-        {
-          title: question,
-          answer,
-          code: codeContent,
-          userId: getUser().id,
-          date: new Date()
-            .toLocaleDateString("ko-KR", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            })
-            .replace(/\. /g, "-")
-            .replace(".", ""),
-        },
-        questionsId
-      );
+      if (questionsId === "") {
+        addQuestion(
+          {
+            title: question,
+            answer,
+            code: codeContent,
+            userId: getUser().id,
+            date: new Date()
+              .toLocaleDateString("ko-KR", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+              .replace(/\. /g, "-")
+              .replace(".", ""),
+          },
+          questionsId
+        );
+      } else {
+        updateQuestion(
+          {
+            title: question,
+            answer,
+            code: codeContent,
+            userId: getUser().id,
+            date: new Date()
+              .toLocaleDateString("ko-KR", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+              .replace(/\. /g, "-")
+              .replace(".", ""),
+          },
+          questionsId,
+          filteredQuestion?.id || ""
+        );
+      }
+
       navigate(`/question/${weekId}`);
     } catch (error) {
       console.error("문제 저장 오류:", error);

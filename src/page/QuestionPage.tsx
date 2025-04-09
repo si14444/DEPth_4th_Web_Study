@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import QuestionComponent from "../components/question/QuestionComponent";
 import { useQuestion } from "../hooks/useQuestion";
@@ -5,8 +6,11 @@ import { useQuestion } from "../hooks/useQuestion";
 const QuestionPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data: questions } = useQuestion();
-  console.log(questions);
+  const { data: questions, refetch } = useQuestion();
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const filteredQuestion = questions?.find(
     (question) => question.weekId === Number(id)
@@ -17,7 +21,9 @@ const QuestionPage = () => {
       <div className="flex justify-end w-full mb-4">
         <button
           onClick={() =>
-            navigate(`/question/write?questionsId=${filteredQuestion?.id}`)
+            navigate(
+              `/question/write?questionsId=${filteredQuestion?.id}&weekId=${weekId}`
+            )
           }
           className="border-1 border-blue-700 text-blue-700 px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition-all duration-300 cursor-pointer"
         >

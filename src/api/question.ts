@@ -4,6 +4,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  updateDoc,
 } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import { Question, QuestionList } from "../types/question";
@@ -79,6 +80,30 @@ export async function addQuestion(question: Question, questionsId: string) {
   } catch (error) {
     console.error("question 데이터 등록 오류:", error);
     throw new Error("question 데이터를 등록하는 중 오류가 발생했습니다");
+  }
+}
+
+// 문제 수정하기
+export async function updateQuestion(
+  question: Question,
+  questionsId: string,
+  questionId: string
+) {
+  try {
+    const questionDocRef = doc(
+      firestore,
+      "question",
+      questionsId,
+      "questions",
+      questionId
+    );
+
+    // 문서 수정
+    await updateDoc(questionDocRef, question as any);
+    console.log("문제 수정 성공:", questionId);
+  } catch (error) {
+    console.error("question 데이터 수정 오류:", error);
+    throw new Error("question 데이터를 수정하는 중 오류가 발생했습니다");
   }
 }
 
