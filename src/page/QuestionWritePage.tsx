@@ -5,6 +5,7 @@ import CodeBlock from "../components/CodeBlock";
 import { useQuestion } from "../hooks/useQuestion";
 import { useWeek } from "../hooks/useWeek";
 import { getFilteredQuestion } from "../utils/getFilteredQuestions";
+import { sortTopic } from "../utils/sortTopic";
 import { getUser } from "../utils/user";
 const QuestionWritePage = () => {
   // 문제 목록 가져오기
@@ -34,7 +35,6 @@ const QuestionWritePage = () => {
   );
   const [showCodeBlock, setShowCodeBlock] = useState(false);
   const [topic, setTopic] = useState(filteredQuestion?.topic || "");
-
   const navigate = useNavigate();
 
   // 문제 저장
@@ -56,7 +56,7 @@ const QuestionWritePage = () => {
               })
               .replace(/\. /g, "-")
               .replace(".", ""),
-            topic,
+            topic: topic.toString(),
           },
           questionsId
         );
@@ -75,7 +75,7 @@ const QuestionWritePage = () => {
               })
               .replace(/\. /g, "-")
               .replace(".", ""),
-            topic,
+            topic: topic.toString(),
           },
           questionsId,
           filteredQuestion?.id || ""
@@ -115,7 +115,7 @@ const QuestionWritePage = () => {
               onChange={(e) => setTopic(e.target.value)}
               className="border-1 resize-none border-gray-300 rounded-md p-2 mt-2 bg-white"
             >
-              {filteredTopic?.map((topic) => (
+              {sortTopic(filteredTopic || []).map((topic) => (
                 <option key={topic.id} value={topic.id}>
                   {topic.name}
                 </option>

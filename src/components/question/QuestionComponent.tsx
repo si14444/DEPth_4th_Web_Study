@@ -26,11 +26,17 @@ const QuestionComponent = ({
       className="flex flex-col justify-between shadow-md p-4 rounded-md cursor-pointer hover:bg-gray-100 transition-all duration-300"
       onClick={handleClick}
     >
+      {/* 질문 제목 */}
       <div className="text-2xl font-bold">
         {question.title.length > maxTitleLength
           ? `${question.title.slice(0, maxTitleLength)}...`
           : question.title}
       </div>
+      {/* 질문 주제 */}
+      <div className="text-sm mt-2 bg-blue-50 p-2 rounded-md">
+        {question.topic}
+      </div>
+      {/* 질문 작성자와 작성일 */}
       <div className="flex justify-between mt-4">
         <div className="text-sm text-gray-500">
           {getUserName(question.userId)?.name}

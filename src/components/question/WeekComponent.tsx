@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Week } from "../../types/weeks";
+import { sortTopic } from "../../utils/sortTopic";
 
 const WeekComponent = ({ week }: { week: Week }) => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const WeekComponent = ({ week }: { week: Week }) => {
       {/* 주제 목록 */}
       <div className="flex flex-col  mt-4 flex-grow">
         {week.topic ? (
-          week.topic.map((topic, index) => (
+          sortTopic(week.topic).map((topic, index) => (
             <div key={index} className="py-2 px-3 my-1 bg-blue-50 rounded-md ">
               <div className="font-medium text-gray-800">{topic.name}</div>
             </div>
