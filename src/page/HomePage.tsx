@@ -39,7 +39,7 @@ const HomePage = () => {
       </h1>
 
       {/* 주차 목록 헤더 영역 - 버튼 추가 */}
-      <div className="w-full max-w-6xl flex justify-between items-center">
+      <div className="w-full flex justify-between items-center">
         <p className="text-gray-500 font-medium">{weeks?.length || 0}개 주차</p>
 
         <button
