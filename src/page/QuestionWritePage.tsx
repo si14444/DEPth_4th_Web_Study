@@ -34,7 +34,11 @@ const QuestionWritePage = () => {
       '// 여기에 JavaScript 코드를 입력하세요\nfunction example() {\n  const greeting = "안녕하세요!";\n  console.log(greeting);\n  return greeting;\n}'
   );
   const [showCodeBlock, setShowCodeBlock] = useState(false);
-  const [topic, setTopic] = useState(filteredQuestion?.topic || "");
+  const [topic, setTopic] = useState(
+    filteredQuestion?.topic
+      ? filteredQuestion?.topic
+      : sortTopic(filteredTopic || [])[0].name
+  );
   const navigate = useNavigate();
 
   // 문제 저장
