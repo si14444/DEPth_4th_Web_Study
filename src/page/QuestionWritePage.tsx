@@ -35,7 +35,7 @@ const QuestionWritePage = () => {
   const handleSave = () => {
     const codeContent = showCodeBlock ? code : "";
     try {
-      if (questionsId === "") {
+      if (!questionId) {
         addQuestion(
           {
             title: question,

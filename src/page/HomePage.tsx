@@ -1,7 +1,6 @@
 import { useState } from "react";
 import NewWeekModal from "../components/home/NewWeekModal";
 import WeekComponent from "../components/question/WeekComponent";
-import { weeks as fallbackWeeks } from "../constans/weeks";
 import { useWeek } from "../hooks/useWeek";
 import { Week } from "../types/weeks";
 const HomePage = () => {
@@ -67,7 +66,7 @@ const HomePage = () => {
 
       {/* 주차 목록 */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 mt-8 gap-4">
-        {(weeks || fallbackWeeks).map((week: Week) => (
+        {weeks?.map((week: Week) => (
           <WeekComponent key={week.id} week={week} />
         ))}
       </div>
