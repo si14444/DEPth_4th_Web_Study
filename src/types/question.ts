@@ -5,6 +5,7 @@ export interface Question {
   answer: string;
   userId: number;
   date: string;
+  topic: string;
 }
 
 export interface QuestionList {

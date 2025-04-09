@@ -3,12 +3,13 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { addQuestion, updateQuestion } from "../api/question";
 import CodeBlock from "../components/CodeBlock";
 import { useQuestion } from "../hooks/useQuestion";
+import { useWeek } from "../hooks/useWeek";
 import { getFilteredQuestion } from "../utils/getFilteredQuestions";
 import { getUser } from "../utils/user";
-
 const QuestionWritePage = () => {
   // 문제 목록 가져오기
   const { data: questions } = useQuestion();
+  const { data: weeks } = useWeek();
   // 주차 번호와 문제 번호 가져오기
   const [searchParams] = useSearchParams();
   const weekId = searchParams.get("weekId");
@@ -19,6 +20,10 @@ const QuestionWritePage = () => {
     Number(weekId),
     questionId
   );
+  // 주차 번호에 해당하는 주제 가져오기
+  const filteredTopic = weeks?.find(
+    (week) => week.id === Number(weekId)
+  )?.topic;
 
   // 문제 정보 상태 관리
   const [question, setQuestion] = useState(filteredQuestion?.title || "");
@@ -28,6 +33,7 @@ const QuestionWritePage = () => {
       '// 여기에 JavaScript 코드를 입력하세요\nfunction example() {\n  const greeting = "안녕하세요!";\n  console.log(greeting);\n  return greeting;\n}'
   );
   const [showCodeBlock, setShowCodeBlock] = useState(false);
+  const [topic, setTopic] = useState(filteredQuestion?.topic || "");
 
   const navigate = useNavigate();
 
@@ -50,6 +56,7 @@ const QuestionWritePage = () => {
               })
               .replace(/\. /g, "-")
               .replace(".", ""),
+            topic,
           },
           questionsId
         );
@@ -68,6 +75,7 @@ const QuestionWritePage = () => {
               })
               .replace(/\. /g, "-")
               .replace(".", ""),
+            topic,
           },
           questionsId,
           filteredQuestion?.id || ""
@@ -100,6 +108,19 @@ const QuestionWritePage = () => {
               rows={2}
               className="border-1 resize-none border-gray-300 rounded-md p-2 mt-2 bg-white"
             />
+
+            <label className="text-md font-bold mt-10">주제</label>
+            <select
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              className="border-1 resize-none border-gray-300 rounded-md p-2 mt-2 bg-white"
+            >
+              {filteredTopic?.map((topic) => (
+                <option key={topic.id} value={topic.id}>
+                  {topic.name}
+                </option>
+              ))}
+            </select>
 
             <button
               onClick={toggleCodeBlock}
