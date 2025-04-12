@@ -12,9 +12,13 @@ const QuestionPage = () => {
     refetch();
   }, []);
 
+  console.log("questions", questions);
+  console.log("id", id);
+
   const filteredQuestion = questions?.find(
     (question) => question.weekId === Number(id)
   );
+  console.log("filteredQuestion", filteredQuestion);
   const weekId = filteredQuestion?.weekId || 0;
   return (
     <div className="flex w-screen flex-col items-center mt-40 p-10">

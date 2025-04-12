@@ -6,6 +6,7 @@ import { Week } from "../types/weeks";
 const HomePage = () => {
   const { data: weeks, isLoading, isError, error } = useWeek();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log(weeks);
 
   if (isLoading) {
     return (

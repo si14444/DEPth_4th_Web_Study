@@ -119,8 +119,8 @@ const QuestionWritePage = () => {
               onChange={(e) => setTopic(e.target.value)}
               className="border-1 resize-none border-gray-300 rounded-md p-2 mt-2 bg-white"
             >
-              {sortTopic(filteredTopic || []).map((topic) => (
-                <option key={topic.id} value={topic.id}>
+              {sortTopic(filteredTopic || []).map((topic, index) => (
+                <option key={index} value={topic.id}>
                   {topic.name}
                 </option>
               ))}

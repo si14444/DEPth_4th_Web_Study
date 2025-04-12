@@ -12,7 +12,7 @@ export async function getWeek(): Promise<Weeks> {
     const weeks: Weeks = [];
 
     // 2. 각 문서와 그 하위 컬렉션 가져오기
-    const weekPromises = querySnapshot.docs.map(async (docSnap) => {
+    const weekPromises = querySnapshot.docs.map(async (docSnap, index) => {
       const weekData = docSnap.data() as Week;
       const weekId = docSnap.id;
 
@@ -26,10 +26,11 @@ export async function getWeek(): Promise<Weeks> {
         topics.push(topicDoc.data() as Topic);
       });
 
+      console.log(index);
       // 5. 주차 데이터에 토픽 배열 추가
       return {
         ...weekData,
-        id: Number(weekId) || weekId,
+        id: index + 1,
         topic: topics,
       };
     });
