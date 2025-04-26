@@ -2,12 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { Week } from "../../types/weeks";
 import { sortTopic } from "../../utils/sortTopic";
 
-const WeekComponent = ({ week }: { week: Week }) => {
+const WeekComponent = ({ week, id }: { week: Week; id: number }) => {
   const navigate = useNavigate();
   return (
     <div
       className="flex flex-col justify-start relative border border-gray-200 hover:border-blue-300 shadow-md hover:shadow-lg rounded-lg p-6 bg-white transition-all duration-300 h-full cursor-pointer"
-      onClick={() => navigate(`/question/${week.id}`)}
+      onClick={() => navigate(`/question/${id}`)}
     >
       {/* 주차 제목 */}
       <div className="text-2xl font-bold text-blue-700 pb-2 border-b border-gray-100">

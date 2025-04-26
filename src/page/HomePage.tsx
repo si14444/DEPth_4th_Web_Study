@@ -6,8 +6,9 @@ import { Week } from "../types/weeks";
 const HomePage = () => {
   const { data: weeks, isLoading, isError, error } = useWeek();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(weeks);
+  const sortedWeeks = weeks?.sort((a, b) => a.name.localeCompare(b.name));
 
+  console.log(sortedWeeks);
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -67,8 +68,8 @@ const HomePage = () => {
 
       {/* 주차 목록 */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 mt-8 gap-4">
-        {weeks?.map((week: Week) => (
-          <WeekComponent key={week.id} week={week} />
+        {sortedWeeks?.map((week: Week, index: number) => (
+          <WeekComponent key={week.id} week={week} id={index + 1} />
         ))}
       </div>
 

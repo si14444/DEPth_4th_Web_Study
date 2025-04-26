@@ -30,7 +30,8 @@ export async function getWeek(): Promise<Weeks> {
       // 5. 주차 데이터에 토픽 배열 추가
       return {
         ...weekData,
-        id: index + 1,
+        // id: index + 1,
+        id: weekData.name.split("주차")[0],
         topic: topics,
       };
     });
